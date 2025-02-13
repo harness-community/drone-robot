@@ -29,12 +29,12 @@ func TestValidateInputs(t *testing.T) {
 			expectErr: false,
 		},
 		{
-			name: "Missing Output Path",
+			name: "Missing Report Directory",
 			args: Args{
 				ReportFileNamePattern: "robot_report.xml",
 			},
 			expectErr: true,
-			errMsg:    "output path is required",
+			errMsg:    "report directory is required",
 		},
 		{
 			name: "Negative Thresholds",
@@ -159,13 +159,13 @@ func TestProcessFile(t *testing.T) {
 		{
 			name:     "Empty File",
 			filePath: "../testdata/empty.xml",
-			expected: StatsResult{}, // ✅ FIXED: Expect an empty result for an empty file
+			expected: StatsResult{},
 		},
 		{
 			name:      "Invalid XML File",
 			filePath:  "../testdata/invalid.xml",
 			expectErr: true,
-			errMsg:    "Error: open ../testdata/invalid.xml: The system cannot find the file specified.",
+			errMsg:    "error opening file: ../testdata/invalid.xml. Error: open ../testdata/invalid.xml: The system cannot find the file specified.",
 		},
 	}
 

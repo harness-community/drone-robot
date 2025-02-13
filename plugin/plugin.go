@@ -27,7 +27,7 @@ type Args struct {
 // ValidateInputs ensures valid plugin arguments.
 func ValidateInputs(args Args) error {
 	if args.ReportDirectory == "" {
-		return errors.New("output path is required")
+		return errors.New("report directory is required")
 	}
 	if args.ReportFileNamePattern == "" {
 		args.ReportFileNamePattern = "*.xml"
@@ -38,7 +38,7 @@ func ValidateInputs(args Args) error {
 	return nil
 }
 
-// Exec processes Robot Framework output files and extracts statistics.
+// Exec processes Robot Framework Report files and extracts statistics.
 func Exec(ctx context.Context, args Args) error {
 	files, err := locateFiles(args.ReportDirectory, args.ReportFileNamePattern)
 	if err != nil {
@@ -47,7 +47,7 @@ func Exec(ctx context.Context, args Args) error {
 	}
 
 	if len(files) == 0 {
-		return errors.New("no Robot Framework output files found. Check the report file pattern")
+		return errors.New("no Robot Framework Report files found. Check the report file pattern")
 	}
 
 	var wg sync.WaitGroup
