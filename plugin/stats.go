@@ -101,6 +101,11 @@ func processSuite(suite *Suite, stats *StatsResult, onlyCritical, countSkipped b
 			stats.SkippedTests++
 		}
 
+		// ✅ Process test-level keywords
+		for _, kw := range test.Keywords {
+			processKeyword(&kw, stats, mu)
+		}
+
 		mu.Unlock()
 	}
 
@@ -114,4 +119,25 @@ func processSuite(suite *Suite, stats *StatsResult, onlyCritical, countSkipped b
 func parseRobotTime(timestamp string) (time.Time, error) {
 	layout := "20060102 15:04:05.000"
 	return time.Parse(layout, timestamp)
+}
+
+func processKeyword(kw *Keyword, stats *StatsResult, mu *sync.Mutex) {
+	mu.Lock()
+	stats.TotalKeywords++
+
+	switch kw.Status.Status {
+	case "PASS":
+		stats.PassedKeywords++
+	case "FAIL":
+		stats.FailedKeywords++
+	case "SKIP":
+		stats.SkippedKeywords++
+	}
+
+	mu.Unlock()
+
+	// Recursively process nested keywords
+	for _, subKw := range kw.Keywords {
+		processKeyword(&subKw, stats, mu)
+	}
 }
