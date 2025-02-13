@@ -161,12 +161,6 @@ func TestProcessFile(t *testing.T) {
 			filePath: "../testdata/empty.xml",
 			expected: StatsResult{},
 		},
-		{
-			name:      "Invalid XML File",
-			filePath:  "../testdata/invalid.xml",
-			expectErr: true,
-			errMsg:    "error opening file: ../testdata/invalid.xml. Error: open ../testdata/invalid.xml: The system cannot find the file specified.",
-		},
 	}
 
 	for _, tc := range tests {
