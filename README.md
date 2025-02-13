@@ -61,11 +61,11 @@ Description: The Robot Framework report file name.
 Example: output.xml
 
 - `PLUGIN_COUNT_SKIPPED_TESTS`
-Description: If true, skipped tests are included in failure rate calculations.
+Description: This flag determines whether skipped tests should be counted in the final test statistics.
 Example: true
 
 - `PLUGIN_ONLY_CRITICAL`
-Description: If true, only critical tests are counted in statistics.
+Description: This flag ensures that only critical tests (tests marked with critical="yes") are considered in the statistics.
 Example: false
 
 - `PLUGIN_PASS_THRESHOLD`

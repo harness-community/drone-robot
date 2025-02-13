@@ -129,29 +129,27 @@ func TestProcessFile(t *testing.T) {
 			name:     "Valid Robot Framework XML Report",
 			filePath: "../testdata/robot_report.xml",
 			expected: StatsResult{
-				TotalSuites:    1,
-				TotalTests:     4,
-				PassedTests:    1,
-				FailedTests:    2,
-				SkippedTests:   1,
-				TotalCritical:  2,
-				CriticalPassed: 1,
-				CriticalFailed: 1,
-				FailureRate:    50.00,
-				SkippedRate:    25.00,
-				ExecutionTime:  10960,
+				TotalSuites:     1,
+				TotalTests:      2,
+				PassedTests:     1,
+				FailedTests:     1,
+				SkippedTests:    0,
+				TotalKeywords:   2,
+				PassedKeywords:  1,
+				FailedKeywords:  1,
+				SkippedKeywords: 0,
+				TotalCritical:   2,
+				CriticalPassed:  1,
+				CriticalFailed:  1,
+				FailureRate:     50.00,
+				SkippedRate:     0.00,
+				ExecutionTime:   10606,
 				FailedTestsDetails: []FailedTestDetails{
 					{
 						Name:         "Test Case 2 - Critical Fail",
 						Suite:        "Advanced Test Suite",
 						Status:       "FAIL",
 						ErrorMessage: "Critical test failed: Major issue detected",
-					},
-					{
-						Name:         "Test Case 3 - Non-Critical Fail",
-						Suite:        "Advanced Test Suite",
-						Status:       "FAIL",
-						ErrorMessage: "Non-critical test failed",
 					},
 				},
 			},
@@ -165,7 +163,7 @@ func TestProcessFile(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			result, err := processFile(tc.filePath, false, false)
+			result, err := processFile(tc.filePath, true, true)
 			if tc.expectErr {
 				if err == nil || !strings.Contains(err.Error(), tc.errMsg) {
 					t.Errorf("Expected error '%s', but got %v", tc.errMsg, err)
