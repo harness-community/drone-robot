@@ -15,22 +15,22 @@ import (
 
 // Args represents the plugin's configurable arguments.
 type Args struct {
-	OutputPath        string `envconfig:"PLUGIN_OUTPUT_PATH"`
-	OutputFileName    string `envconfig:"PLUGIN_OUTPUT_FILE_NAME"`
-	PassThreshold     int    `envconfig:"PLUGIN_PASS_THRESHOLD"`
-	UnstableThreshold int    `envconfig:"PLUGIN_UNSTABLE_THRESHOLD"`
-	CountSkippedTests bool   `envconfig:"PLUGIN_COUNT_SKIPPED_TESTS"`
-	OnlyCritical      bool   `envconfig:"PLUGIN_ONLY_CRITICAL"`
-	Level             string `envconfig:"PLUGIN_LOG_LEVEL"`
+	ReportDirectory       string `envconfig:"PLUGIN_REPORT_DIRECTORY"`
+	ReportFileNamePattern string `envconfig:"PLUGIN_REPORT_FILE_NAME_PATTERN"`
+	PassThreshold         int    `envconfig:"PLUGIN_PASS_THRESHOLD"`
+	UnstableThreshold     int    `envconfig:"PLUGIN_UNSTABLE_THRESHOLD"`
+	CountSkippedTests     bool   `envconfig:"PLUGIN_COUNT_SKIPPED_TESTS"`
+	OnlyCritical          bool   `envconfig:"PLUGIN_ONLY_CRITICAL"`
+	Level                 string `envconfig:"PLUGIN_LOG_LEVEL"`
 }
 
 // ValidateInputs ensures valid plugin arguments.
 func ValidateInputs(args Args) error {
-	if args.OutputPath == "" {
+	if args.ReportDirectory == "" {
 		return errors.New("output path is required")
 	}
-	if args.OutputFileName == "" {
-		args.OutputFileName = "output.xml"
+	if args.ReportFileNamePattern == "" {
+		args.ReportFileNamePattern = "*.xml"
 	}
 	if args.PassThreshold < 0 || args.UnstableThreshold < 0 {
 		return errors.New("threshold values must be non-negative")
@@ -40,7 +40,7 @@ func ValidateInputs(args Args) error {
 
 // Exec processes Robot Framework output files and extracts statistics.
 func Exec(ctx context.Context, args Args) error {
-	files, err := locateFiles(args.OutputPath, args.OutputFileName)
+	files, err := locateFiles(args.ReportDirectory, args.ReportFileNamePattern)
 	if err != nil {
 		logrus.Errorf("Error locating files: %v", err)
 		return fmt.Errorf("failed to locate files: %v", err)

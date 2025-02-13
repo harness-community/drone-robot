@@ -22,8 +22,8 @@ Execute the plugin from your current working directory:
 
 ```
 docker run --rm \
-  -e PLUGIN_OUTPUT_PATH="./reports" \
-  -e PLUGIN_OUTPUT_FILE_NAME="output.xml" \
+  -e PLUGIN_REPORT_DIRECTORY="./reports" \
+  -e PLUGIN_REPORT_FILE_NAME_PATTERN="output.xml" \
   -e PLUGIN_PASS_THRESHOLD=90 \
   -e PLUGIN_UNSTABLE_THRESHOLD=80 \
   -e PLUGIN_COUNT_SKIPPED_TESTS=true \
@@ -40,8 +40,8 @@ docker run --rm \
     spec:
       image: plugins/robot
       settings:
-        output_path: "./reports"
-        output_file_name: "output.xml"
+        report_directory: "./reports"
+        report_file_name_pattern: "output.xml"
         pass_threshold: 90
         unstable_threshold: 80
         count_skipped_tests: true
@@ -52,11 +52,11 @@ docker run --rm \
 ```
 
 ## Plugin Settings
-- `PLUGIN_OUTPUT_PATH`
+- `PLUGIN_REPORT_DIRECTORY`
 Description: The directory where output.xml reports are located.
 Example: ./reports
 
-- `PLUGIN_OUTPUT_FILE_NAME`
+- `PLUGIN_REPORT_FILE_NAME_PATTERN`
 Description: The Robot Framework report file name.
 Example: output.xml
 

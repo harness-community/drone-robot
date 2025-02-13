@@ -21,17 +21,17 @@ func TestValidateInputs(t *testing.T) {
 		{
 			name: "Valid Inputs",
 			args: Args{
-				OutputPath:        "./testdata",
-				OutputFileName:    "robot_report.xml",
-				PassThreshold:     5,
-				UnstableThreshold: 10,
+				ReportDirectory:       "./testdata",
+				ReportFileNamePattern: "robot_report.xml",
+				PassThreshold:         5,
+				UnstableThreshold:     10,
 			},
 			expectErr: false,
 		},
 		{
 			name: "Missing Output Path",
 			args: Args{
-				OutputFileName: "robot_report.xml",
+				ReportFileNamePattern: "robot_report.xml",
 			},
 			expectErr: true,
 			errMsg:    "output path is required",
@@ -39,9 +39,9 @@ func TestValidateInputs(t *testing.T) {
 		{
 			name: "Negative Thresholds",
 			args: Args{
-				OutputPath:     "./testdata",
-				OutputFileName: "robot_report.xml",
-				PassThreshold:  -1,
+				ReportDirectory:       "./testdata",
+				ReportFileNamePattern: "robot_report.xml",
+				PassThreshold:         -1,
 			},
 			expectErr: true,
 			errMsg:    "threshold values must be non-negative",
@@ -78,6 +78,13 @@ func TestLocateFiles(t *testing.T) {
 			outputFile:    "robot_report.xml",
 			expectedErr:   false,
 			expectedFiles: 1,
+		},
+		{
+			name:          "Valid Directory with Glob Pattern",
+			directory:     "../testdata",
+			outputFile:    "*.xml",
+			expectedErr:   false,
+			expectedFiles: 2,
 		},
 		{
 			name:        "Invalid Directory",
@@ -189,17 +196,17 @@ func TestExec(t *testing.T) {
 		{
 			name: "Valid Execution",
 			args: Args{
-				OutputPath:     "../testdata",
-				OutputFileName: "robot_report.xml",
-				PassThreshold:  5,
+				ReportDirectory:       "../testdata",
+				ReportFileNamePattern: "robot_report.xml",
+				PassThreshold:         5,
 			},
 			expectErr: false,
 		},
 		{
 			name: "No XML Reports Found",
 			args: Args{
-				OutputPath:     "../testdata",
-				OutputFileName: "invalid.xml",
+				ReportDirectory:       "../testdata",
+				ReportFileNamePattern: "invalid.xml",
 			},
 			expectErr: true,
 			errMsg:    "failed to locate files: no files found matching the report filename pattern",
