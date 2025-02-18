@@ -8,14 +8,10 @@ import (
 // computeStats calculates all test statistics from the parsed XML.
 func computeStats(robotOutput RobotOutput, onlyCritical, countSkipped bool) StatsResult {
 	stats := StatsResult{}
-	var wg sync.WaitGroup
+	var mu sync.Mutex
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		processSuite(&robotOutput.Suite, &stats, onlyCritical, countSkipped)
-	}()
-	wg.Wait()
+	// Call processSuite directly instead of launching a goroutine
+	processSuite(&robotOutput.Suite, &stats, &mu, onlyCritical, countSkipped)
 
 	// ✅ Compute failure & skipped rates safely (avoid division by zero)
 	if stats.TotalTests > 0 {
@@ -29,9 +25,7 @@ func computeStats(robotOutput RobotOutput, onlyCritical, countSkipped bool) Stat
 }
 
 // processSuite extracts statistics recursively.
-func processSuite(suite *Suite, stats *StatsResult, onlyCritical, countSkipped bool) {
-	var mu sync.Mutex
-
+func processSuite(suite *Suite, stats *StatsResult, mu *sync.Mutex, onlyCritical, countSkipped bool) {
 	if len(suite.Tests) > 0 || len(suite.Suites) > 0 {
 		mu.Lock()
 		stats.TotalSuites++
@@ -58,7 +52,7 @@ func processSuite(suite *Suite, stats *StatsResult, onlyCritical, countSkipped b
 		wg.Add(1)
 		go func(test Test) {
 			defer wg.Done()
-			processTest(test, suite.Name, stats, &mu, countSkipped)
+			processTest(test, suite.Name, stats, mu, countSkipped)
 		}(test)
 	}
 
@@ -66,7 +60,7 @@ func processSuite(suite *Suite, stats *StatsResult, onlyCritical, countSkipped b
 		wg.Add(1)
 		go func(subSuite Suite) {
 			defer wg.Done()
-			processSuite(&subSuite, stats, onlyCritical, countSkipped)
+			processSuite(&subSuite, stats, mu, onlyCritical, countSkipped)
 		}(subSuite)
 	}
 
